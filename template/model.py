@@ -2,6 +2,7 @@ import timm
 import torch
 import numpy as np
 import torch.nn as nn
+from config import CFG
 
 class BiomassModel(nn.Module):
     def __init__(self, model_name='convnext_tiny', pretrained=True, target_names=None, dual_stream=True, dropout=0.3):
@@ -106,3 +107,20 @@ def metric_rmse(pred_tuple, target, use_log1p=True):
     rmse_G = rmse_torch(pGDM, tGDM)
     rmse_R = rmse_torch(pGR, tGR)
     return (rmse_T + rmse_G + rmse_R) / 3.0, (rmse_T, rmse_G, rmse_R)
+
+class ModelEMA:
+    def __init__(self, model, decay=0.999):
+        self.ema = BiomassModel(CFG.MODEL_NAME, pretrained=False, target_names=model.target_names, 
+                                dual_stream=model.dual_stream, dropout=model.dropout).to(CFG.DEVICE)
+        self.ema.load_state_dict(model.state_dict())
+        self.ema.eval()
+        self.decay = decay
+        for p in self.ema.parameters():
+            p.requires_grad_(False)
+
+    @torch.no_grad()
+    def update(self, model):
+        d = self.decay
+        msd = model.state_dict()
+        for k, v in self.ema.state_dict().items():
+            v.copy_(v * d + (1. - d) * msd[k])
