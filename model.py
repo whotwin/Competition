@@ -6,7 +6,7 @@ class BiomassSwinModel(nn.Module):
     """
     使用 Swin Transformer 进行多输出回归
     """
-    def __init__(self, model_name='swin_base_patch4_window7_224', pretrained=True, num_outputs=5, dropout=0.3):
+    def __init__(self, model_name='swin_base_patch4_window7_224', pretrained=False, num_outputs=5, dropout=0.3):
         super().__init__()
         # timm 载入 backbone
         self.backbone = timm.create_model(model_name, pretrained=pretrained, num_classes=0)  # num_classes=0表示去掉原分类头
@@ -27,3 +27,5 @@ class BiomassSwinModel(nn.Module):
 
 if __name__ == '__main__':
     model = BiomassSwinModel().cuda()
+    state_dict = torch.load('D:/Competition/models/swin_base_patch4_window7_224_22kto1k.pth', map_location='cpu')
+    model.load_state_dict(state_dict, strict=False)
