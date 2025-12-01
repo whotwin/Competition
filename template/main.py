@@ -1,10 +1,11 @@
 import os, gc
-from utils import *
 import numpy as np
 import pandas as pd
+from .utils import *
 from tqdm import tqdm
-from dataset import TestDataset
-from train import train_one_fold
+from .config import CFG
+from .dataset import TestDataset
+from .train import train_one_fold
 from torch.utils.data import DataLoader
 from sklearn.model_selection import StratifiedKFold
 

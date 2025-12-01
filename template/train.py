@@ -1,7 +1,8 @@
 import os
 import math
-from utils import *
+from .utils import *
 from tqdm import tqdm
+from .config import CFG
 from torch.optim import AdamW
 from dataset import TrainDataset
 from torch.utils.data import DataLoader
@@ -46,10 +47,6 @@ def csiro_weighted_r2_from_three_tensors(
     t_total, t_gdm, t_green,
     use_log1p=True
 ):
-    """
-    3ターゲットのTensor([N])から、5ターゲットに拡張して重み付きR²を返す。
-    戻り: overall(float), per_target(dict)
-    """
     to_np = lambda x: x.detach().cpu().numpy()
     # log1p学習なら実数空間に戻してから評価
     if use_log1p:

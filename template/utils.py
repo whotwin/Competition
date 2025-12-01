@@ -2,8 +2,8 @@ import cv2
 import torch
 import random
 import numpy as np
-from config import CFG
-from model import BiomassModel
+from .config import CFG
+from .model import BiomassModel
 from albumentations import (
     Compose, Resize, HorizontalFlip, VerticalFlip, RandomRotate90,
     ShiftScaleRotate, RandomBrightnessContrast, HueSaturationValue,

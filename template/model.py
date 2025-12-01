@@ -2,7 +2,7 @@ import timm
 import torch
 import numpy as np
 import torch.nn as nn
-from config import CFG
+from .config import CFG
 
 class BiomassModel(nn.Module):
     def __init__(self, model_name='convnext_tiny', pretrained=True, target_names=None, dual_stream=True, dropout=0.3):
