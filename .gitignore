@@ -129,3 +129,5 @@ work_dirs/
 *.sh~
 *.onnx
 *.txt
+
+models_hub/

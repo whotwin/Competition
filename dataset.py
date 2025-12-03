@@ -1,17 +1,21 @@
 import os
 import torch
 from PIL import Image
+from utils import read_csv
 from torchvision import transforms
 from torch.utils.data import Dataset
 
 class CSIRO_Dataset(Dataset):
-    def __init__(self, cfg, image_list):
+    def __init__(self, cfg, image_list, groups):
         super().__init__()
         self.train_csv_path = cfg.train_csv_path
         self.data_root = cfg.data_root
         self.target_order = cfg.target_order   # e.g. ["Dry_Green_g","Dry_Dead_g","Dry_Clover_g","GDM_g","Dry_Total_g"]
-        self.image_list = image_list
+        # self.image_list = image_list
+        image_list, groups, _ = read_csv(self.train_csv_path)
+
         assert isinstance(image_list, list)
+        self.image_list, self.groups = image_list, groups
         # transforms
         self.transform = transforms.Compose([
             transforms.Resize((512, 512)),
@@ -57,3 +61,12 @@ class CSIRO_Dataset(Dataset):
             "targets": targets,
             "image_path": image_rel
         }
+    
+if __name__ == '__main__':
+    from config import CFG
+    from torch.utils.data import DataLoader
+    dataset = CSIRO_Dataset(CFG)
+    dataloader = DataLoader(dataset, 1)
+    for i, data in enumerate(dataloader):
+        print(data)
+        break
