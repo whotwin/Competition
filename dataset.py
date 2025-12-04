@@ -6,14 +6,14 @@ from torchvision import transforms
 from torch.utils.data import Dataset
 
 class CSIRO_Dataset(Dataset):
-    def __init__(self, cfg, image_list, groups):
+    def __init__(self, cfg, fold):
         super().__init__()
         self.train_csv_path = cfg.train_csv_path
         self.data_root = cfg.data_root
         self.target_order = cfg.target_order   # e.g. ["Dry_Green_g","Dry_Dead_g","Dry_Clover_g","GDM_g","Dry_Total_g"]
         # self.image_list = image_list
-        image_list, groups, _ = read_csv(self.train_csv_path)
-
+        # image_list, groups, _ = read_csv(self.train_csv_path)
+        image_list, groups = fold['images', 'groups']
         assert isinstance(image_list, list)
         self.image_list, self.groups = image_list, groups
         # transforms
@@ -56,11 +56,12 @@ class CSIRO_Dataset(Dataset):
         )
         targets = torch.log1p(targets)
 
-        return {
-            "image": img,
-            "targets": targets,
-            "image_path": image_rel
-        }
+        return img, targets#, image_rel
+    # {
+    #         "image": img,
+    #         "targets": targets,
+    #         "image_path": image_rel
+    #     }
     
 if __name__ == '__main__':
     from config import CFG

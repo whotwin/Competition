@@ -24,12 +24,23 @@ def make_kfolds(image_list, groups, n_splits=5, seed=42):
     for fold_idx, (train_idx, val_idx) in enumerate(kf.split(image_list)):
         train_imgs = image_list[train_idx].tolist()
         val_imgs = image_list[val_idx].tolist()
-        folds.append({
-            "train": train_imgs,
-            "val": val_imgs
-        })
+
+        fold = {
+            "train": {
+                "images": train_imgs,
+                "groups": {img: groups[img] for img in train_imgs}
+            },
+            "val": {
+                "images": val_imgs,
+                "groups": {img: groups[img] for img in val_imgs}
+            }
+        }
+
+        folds.append(fold)
         print(f"Fold {fold_idx}: train {len(train_imgs)} images, val {len(val_imgs)} images")
+
     return folds
+
 
 def read_csv(train_csv_path):
     df = pd.read_csv(train_csv_path)

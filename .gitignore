@@ -131,3 +131,6 @@ work_dirs/
 *.txt
 
 models_hub/
+data/
+csiro-biomass/train/
+csiro-biomass/test/
